@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/dhanavadh/todol/config"
-	"github.com/dhanavadh/todol/models"
-	"github.com/dhanavadh/todol/routes"
+	"todol/config"
+	"todol/models"
+	"todol/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +13,7 @@ import (
 func main() {
 	config.ConnectDatabase()
 
-	config.DB.AutoMigrate(&models.Todo{})
+	config.DB.AutoMigrate(&models.Todo{}, &models.User{})
 
 	r := gin.Default()
 	routes.SetUpRoutes(r)

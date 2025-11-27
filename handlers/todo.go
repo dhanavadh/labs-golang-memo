@@ -3,14 +3,15 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/dhanavadh/todol/config"
-	"github.com/dhanavadh/todol/models"
+	"todol/config"
+	"todol/models"
+
 	"github.com/gin-gonic/gin"
 )
 
 func GetTodos(c *gin.Context) {
 	var todos []models.Todo
-	config.DB.Find(&todos)
+	config.DB.Preload("User").Find(&todos)
 	c.JSON(http.StatusOK, todos)
 }
 
@@ -18,8 +19,9 @@ func GetTodo(c *gin.Context) {
 	id := c.Param("id")
 	var todo models.Todo
 
-	if result := config.DB.First(&todo, id); result.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
+	result := config.DB.Preload("User").First(&todo, id)
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Todo Not Found"})
 		return
 	}
 
